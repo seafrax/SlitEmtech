@@ -3,15 +3,7 @@ import tensorflow as tf
 import PIL
 from PIL import Image, ImageOps
 import numpy as np
-import matplotlib.pyplot as plt
 
-# Page Title and Description
-st.title("Brain Tumor MRI Classification")
-st.markdown("---")
-st.write("Upload an MRI image of a brain and classify whether it has Glioma, Meningioma, No Tumor, or Pituitary Tumor.")
-st.markdown("---")
-
-# Function to load the model
 @st.cache(allow_output_mutation=True)
 def load_model():
     model = tf.keras.models.load_model('fmodel.h5')
@@ -19,29 +11,27 @@ def load_model():
 
 model = load_model()
 
-# File Uploader
+st.write("""
+# Brain Tumor MRI Classification
+""")
+
 file = st.file_uploader("Choose a Brain MRI image", type=["jpg", "png"])
 
-# Function to make predictions
 def import_and_predict(image_data, model):
-    size = (150, 150)  
-    image = ImageOps.fit(image_data, size, PIL.Image.LANCZOS) 
+    size = (150, 150)  # Match the input size with the Google Colab code
+    image = ImageOps.fit(image_data, size, PIL.Image.LANCZOS)  # Use PIL.Image.LANCZOS for resizing
     img = np.asarray(image)
-    img = img / 255.0  
+    img = img / 255.0  # Normalize pixel values
     img_reshape = img[np.newaxis, ...]
     prediction = model.predict(img_reshape)
     return prediction
 
-# Display the results
-if file is not None:
+if file is None:
+    st.text("Please upload an image file")
+else:
     image = Image.open(file)
-    st.image(image, caption='Uploaded MRI', use_column_width=True)
-    st.write("")
-    st.write("Classifying...")
+    st.image(image, use_column_width=True)
     prediction = import_and_predict(image, model)
     class_names = ['Glioma', 'Meningioma', 'No Tumor', 'Pituitary']
-    result = class_names[np.argmax(prediction)]
-    if result == 'No Tumor':
-        st.success(f"Prediction: {result}")
-    else:
-        st.error(f"Prediction: {result}")
+    string = "OUTPUT : " + class_names[np.argmax(prediction)]
+    st.success(string)
