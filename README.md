@@ -1,1 +1,1 @@
-# SlitEmtech
+# Brain-Tumor-MRI-Classification-using-Streamlit
