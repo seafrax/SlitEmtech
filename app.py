@@ -49,15 +49,14 @@ if page == "Home":
             st.error(f"Prediction: {result}")
 
 # Names Page
-elif page == "Group Members":
+elif page == "Names":
     st.title("Names")
     st.markdown("---")
-    st.write("Here are the members of GROUP 3")
-    st.write("- Ejercito, Marlon")
-    st.write("- Flores, Joshua")
-    st.write("- Flores, Marc")
-    st.write("- Gabiano, Leonard")
-    st.write("- Gomez, Joram")
+    st.write("This page displays the names of the classes that the model can classify:")
+    st.write("- Glioma")
+    st.write("- Meningioma")
+    st.write("- No Tumor")
+    st.write("- Pituitary")
 
 # About Page
 elif page == "About":
