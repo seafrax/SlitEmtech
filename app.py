@@ -14,11 +14,12 @@ model = load_model()
 
 # Navigation Bar
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Go to", ["Home", "About"])
+page = st.sidebar.radio("Go to", ["Home", "Names", "About"])
 
 # Home Page
 if page == "Home":
     st.title("Brain Tumor MRI Classification")
+    st.markdown("---")
 
     # File Uploader
     file = st.file_uploader("Choose a Brain MRI image", type=["jpg", "png"])
@@ -47,8 +48,19 @@ if page == "Home":
         else:
             st.error(f"Prediction: {result}")
 
+# Names Page
+elif page == "Names":
+    st.title("Names")
+    st.markdown("---")
+    st.write("This page displays the names of the classes that the model can classify:")
+    st.write("- Glioma")
+    st.write("- Meningioma")
+    st.write("- No Tumor")
+    st.write("- Pituitary")
+
 # About Page
 elif page == "About":
     st.title("About")
+    st.markdown("---")
     st.write("This is a simple web application that classifies Brain MRI images into four categories: Glioma, Meningioma, No Tumor, and Pituitary Tumor.")
     st.write("It uses a deep learning model trained on MRI images to make predictions.")
