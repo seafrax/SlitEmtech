@@ -3,10 +3,13 @@ import tensorflow as tf
 import PIL
 from PIL import Image, ImageOps
 import numpy as np
+import matplotlib.pyplot as plt
 
 # Page Title and Description
 st.title("Brain Tumor MRI Classification")
+st.markdown("---")
 st.write("Upload an MRI image of a brain and classify whether it has Glioma, Meningioma, No Tumor, or Pituitary Tumor.")
+st.markdown("---")
 
 # Function to load the model
 @st.cache(allow_output_mutation=True)
@@ -37,5 +40,8 @@ if file is not None:
     st.write("Classifying...")
     prediction = import_and_predict(image, model)
     class_names = ['Glioma', 'Meningioma', 'No Tumor', 'Pituitary']
-    string = "Prediction: " + class_names[np.argmax(prediction)]
-    st.success(string)
+    result = class_names[np.argmax(prediction)]
+    if result == 'No Tumor':
+        st.success(f"Prediction: {result}")
+    else:
+        st.error(f"Prediction: {result}")
