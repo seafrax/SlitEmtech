@@ -4,6 +4,7 @@ import PIL
 from PIL import Image, ImageOps
 import numpy as np
 
+# Function to load the model
 @st.cache(allow_output_mutation=True)
 def load_model():
     model = tf.keras.models.load_model('fmodel.h5')
@@ -11,27 +12,43 @@ def load_model():
 
 model = load_model()
 
-st.write("""
-# Brain Tumor MRI Classification
-""")
+# Navigation Bar
+st.sidebar.title("Navigation")
+page = st.sidebar.radio("Go to", ["Home", "About"])
 
-file = st.file_uploader("Choose a Brain MRI image", type=["jpg", "png"])
+# Home Page
+if page == "Home":
+    st.title("Brain Tumor MRI Classification")
 
-def import_and_predict(image_data, model):
-    size = (150, 150)  # Match the input size with the Google Colab code
-    image = ImageOps.fit(image_data, size, PIL.Image.LANCZOS)  # Use PIL.Image.LANCZOS for resizing
-    img = np.asarray(image)
-    img = img / 255.0  # Normalize pixel values
-    img_reshape = img[np.newaxis, ...]
-    prediction = model.predict(img_reshape)
-    return prediction
+    # File Uploader
+    file = st.file_uploader("Choose a Brain MRI image", type=["jpg", "png"])
 
-if file is None:
-    st.text("Please upload an image file")
-else:
-    image = Image.open(file)
-    st.image(image, use_column_width=True)
-    prediction = import_and_predict(image, model)
-    class_names = ['Glioma', 'Meningioma', 'No Tumor', 'Pituitary']
-    string = "OUTPUT : " + class_names[np.argmax(prediction)]
-    st.success(string)
+    # Function to make predictions
+    def import_and_predict(image_data, model):
+        size = (150, 150)  
+        image = ImageOps.fit(image_data, size, PIL.Image.LANCZOS) 
+        img = np.asarray(image)
+        img = img / 255.0  
+        img_reshape = img[np.newaxis, ...]
+        prediction = model.predict(img_reshape)
+        return prediction
+
+    # Display the results
+    if file is not None:
+        image = Image.open(file)
+        st.image(image, caption='Uploaded MRI', use_column_width=True)
+        st.write("")
+        st.write("Classifying...")
+        prediction = import_and_predict(image, model)
+        class_names = ['Glioma', 'Meningioma', 'No Tumor', 'Pituitary']
+        result = class_names[np.argmax(prediction)]
+        if result == 'No Tumor':
+            st.success(f"Prediction: {result}")
+        else:
+            st.error(f"Prediction: {result}")
+
+# About Page
+elif page == "About":
+    st.title("About")
+    st.write("This is a simple web application that classifies Brain MRI images into four categories: Glioma, Meningioma, No Tumor, and Pituitary Tumor.")
+    st.write("It uses a deep learning model trained on MRI images to make predictions.")
